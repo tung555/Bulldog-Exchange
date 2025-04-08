@@ -9,19 +9,20 @@ export default function Home() {
     <>
       <Navbar />
 
-      <div className="relative h-screen w-screen">
+      <div className="relative h-screen w-screen" >
         <Image
-          src="/UGAArch.jpg"
+          src="/./UGASplash2.jpg"
           alt="Background"
           fill
-          className="object-cover"
+          className="object-cover opacity-80 bg-white"
           priority
         />
-        <div className="absolute inset-0 flex items-center justify-center text-white bg-black bg-opacity-40">
+        {/* Container for title */}
+        <div className="absolute inset-0 flex justify-center text-white top-10">
           <h1 className="text-4xl md:text-6xl font-bold">
             Welcome to Bulldog Exchange
           </h1>
-        </div>
+        </div> 
       </div>
     </>
   );
