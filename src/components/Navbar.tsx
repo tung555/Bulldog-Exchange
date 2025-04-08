@@ -15,11 +15,17 @@ const Navbar = () => {
 
   return (
     <nav className='bg-white-700 border-b-1 border-white'>
-      <div className='mx-auto max-w-7xl px-2 sm:px-6 lg:px-8'>
+      <div className='mx-auto max-w-7xl px-2 sm:px-6 lg:px-8 bg-white' >
         <div className='relative flex h-20 items-center justify-between'>
-          <div className='absolute inset-y-0 left-0 flex items-center md:hidden'>
+          
+          <Image className='h-20 w-auto' src={logo} alt='Bulldog Exchange logo' />
+          <div className='absolute inset-y-0 right-0 flex items-center md:hidden'>
+            
             {/* <!-- Mobile menu button - hamburger --> */}
-            <button
+            
+              
+
+              <button
               type='button'
               id='mobile-dropdown-button'
               className='relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white'
@@ -45,10 +51,10 @@ const Navbar = () => {
             </button>
           </div>
 
-          <div className='flex flex-1 items-center justify-center md:items-stretch md:justify-start'>
+          <div className='flex flex-1 items-center justify-center md:items-stretch md:justify-start bg-white' >
             {/* <!-- Logo --> */}
             <a className='flex flex-shrink-0 items-center' href='#'>
-              <Image className='h-20 w-auto' src={logo} alt='Bulldog Exchange logo' />
+              
 
               <span className='hidden md:block text-black text-2xl font-bold ml-2'>
                 Bulldog Exchange
