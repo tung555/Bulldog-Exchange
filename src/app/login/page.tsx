@@ -6,6 +6,7 @@ export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  //i will implement later
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     //login logic here
