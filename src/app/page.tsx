@@ -20,14 +20,14 @@ export default function Home() {
         />
         {/* Container for title */}
         <div className="absolute inset-0 flex justify-center text-white top-10">
-          <h1 className="text-4xl md:text-6xl font-bold"
-          style={{ backgroundColor: 'rgba(241, 45, 45, 1)', border:'1px', height: 'fit-content', WebkitTextStroke: '1px black' }}>
+          <h1 className="text-4xl md:text-6xl font-bold text-center px-3 py-2 rounded-sm"
+          style={{ backgroundColor: 'rgba(241, 45, 45, 1)', border:'1px', height: 'fit-content', WebkitTextStroke: '2px black' }}>
             Welcome to Bulldog Exchange
           </h1>
         </div> 
-        <div className="absolute inset-0 flex justify-center text-white top-20">
-          <h2 className="text-2xl md:text-4xl font-bold"
-          style={{ backgroundColor: 'rgba(255, 255, 255, 0.5)', border:'1px', height: 'fit-content', WebkitTextStroke: '1px black' }}>
+        <div className="absolute inset-0 flex justify-center text-white top-30">
+          <h2 className="text-2xl md:text-4xl font-bold text-center py-2 rounded-sm px-3"
+          style={{ backgroundColor: 'rgba(255, 255, 255, 0.5)', border:'1px', height: 'fit-content', WebkitTextStroke: '1px black', fontSize:'30px'}}>
             Sign in to join other UGA Dawgs and sell your used books and items today!
           </h2>
         </div>
