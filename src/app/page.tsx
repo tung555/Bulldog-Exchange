@@ -2,6 +2,7 @@
 import connectMongoDB from '@/lib/mongodb';
 import Navbar from '../components/Navbar';
 import Image from 'next/image';
+import Link from 'next/link';
 
 export default function Home() {
   connectMongoDB();
@@ -19,10 +20,24 @@ export default function Home() {
         />
         {/* Container for title */}
         <div className="absolute inset-0 flex justify-center text-white top-10">
-          <h1 className="text-4xl md:text-6xl font-bold">
+          <h1 className="text-4xl md:text-6xl font-bold"
+          style={{ backgroundColor: 'rgba(241, 45, 45, 1)', border:'1px', height: 'fit-content', WebkitTextStroke: '1px black' }}>
             Welcome to Bulldog Exchange
           </h1>
         </div> 
+        <div className="absolute inset-0 flex justify-center text-white top-20">
+          <h2 className="text-2xl md:text-4xl font-bold"
+          style={{ backgroundColor: 'rgba(255, 255, 255, 0.5)', border:'1px', height: 'fit-content', WebkitTextStroke: '1px black' }}>
+            Sign in to join other UGA Dawgs and sell your used books and items today!
+          </h2>
+        </div>
+        <div className="fixed bottom-10 left-1/2 transform -translate-x-1/2">
+          <Link href="/MarketPlace">
+            <button className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+              Browse Now
+            </button>
+          </Link>
+        </div>
       </div>
     </>
   );
