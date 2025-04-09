@@ -51,13 +51,13 @@ const Navbar = () => {
               <>
                 <Link
                   href="/login"
-                  className="text-black bg-gray-300 hover:bg-gray-400 hover:text-white rounded-md px-3 py-2"
+                  className="text-white bg-[#D13030] hover:bg-[#E35555] hover:text-white rounded-md px-3 py-2"
                 >
                   Login
                 </Link>
                 <Link
                   href="/signup"
-                  className="text-black bg-gray-300 hover:bg-gray-400 hover:text-white rounded-md px-3 py-2"
+                  className="text-white bg-black hover:bg-gray-500 hover:text-white rounded-md px-3 py-2"
                 >
                   Sign Up
                 </Link>

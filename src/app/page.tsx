@@ -21,7 +21,7 @@ export default function Home() {
         {/* Container for title */}
         <div className="absolute inset-0 flex justify-center text-white top-8">
           <h1 className="text-4xl md:text-6xl font-bold text-center px-3 py-2 rounded-sm coiny-regular "
-          style={{ backgroundColor: 'rgba(241, 45, 45, 1)', border:'5px solid #cc020c', height: 'fit-content', WebkitTextStroke: '2px black'}}>
+          style={{ backgroundColor: 'rgba(241, 45, 45, 1)', border:'5px solid #D13030', height: 'fit-content', WebkitTextStroke: '2px black'}}>
             Welcome to Bulldog Exchange
           </h1>
         </div> 
