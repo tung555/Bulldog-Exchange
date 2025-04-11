@@ -4,17 +4,7 @@ import Navbar from '@/components/Navbar';
 import Listing from '@/components/Listing'
 import Listings from '@/components/Listings'
 
-export default function SignupPage() {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-
-  //i will implement later
-  const handleSignup = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log('Signing up with:', { name, email, password });
-  };
+export default function MarketPlace() {
 
   return (
     <>

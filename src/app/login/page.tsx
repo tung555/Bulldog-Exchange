@@ -1,16 +1,32 @@
 'use client';
 import { useState } from 'react';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '@/lib/firebase';
 import Navbar from '@/components/Navbar';
+import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState('');
+  const router = useRouter();
 
-  //i will implement later
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Logging in with:', { email, password });
+    setError('');
+
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      alert('Login successful!');
+      router.push('/');
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('An unknown error occurred.');
+      }
+    }
   };
 
   return (
@@ -22,6 +38,8 @@ export default function LoginPage() {
           <h2 className="text-3xl font-bold text-white mb-6 text-center">UGA Login</h2>
 
           <form onSubmit={handleLogin} className="space-y-4">
+            {error && <p className="text-white bg-black/40 px-4 py-2 rounded">{error}</p>}
+
             <div>
               <label className="block text-white font-medium mb-1">Email</label>
               <input
@@ -29,7 +47,7 @@ export default function LoginPage() {
                 className="w-full px-4 py-2 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-white"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder='myID@uga.edu'
+                placeholder="myID@uga.edu"
                 required
               />
             </div>
