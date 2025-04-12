@@ -79,12 +79,20 @@ const Navbar = () => {
                 </Link>
               </>
             ) : (
-              <button
-                onClick={handleLogout}
-                className="text-white bg-black hover:bg-gray-500 hover:text-white rounded-md px-3 py-2"
-              >
-                Logout
-              </button>
+              <>
+                <button
+                  onClick={handleLogout}
+                  className="text-white bg-black hover:bg-gray-500 hover:text-white rounded-md px-3 py-2"
+                >
+                  Logout
+                </button>
+                <Link
+                  href="/my-items"
+                  className="text-white bg-red-500 hover:bg-gray-500 hover:text-white rounded-md px-3 py-2"
+                >
+                  Your Items
+                </Link>
+              </>
             )}
           </div>
         </div>
