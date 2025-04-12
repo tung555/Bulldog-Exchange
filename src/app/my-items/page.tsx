@@ -5,6 +5,7 @@ import { auth } from '@/lib/firebase';
 import Navbar from '@/components/Navbar';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import Footer from '@/components/footer';
 
 interface Item {
   _id: string;
@@ -100,6 +101,11 @@ export default function MyItemsPage() {
             Add Item
           </button>
         </div>
+        <input
+              type="text"
+              placeholder="Search for items by type or title..."
+              className="w-full p-2 rounded-lg border border-gray-300 text-black"
+        />
 
         {items.length === 0 ? (
           <p className="text-gray-500">You haven't posted any items yet.</p>
@@ -191,6 +197,7 @@ export default function MyItemsPage() {
           </div>
         </div>
       )}
+      <Footer />
     </>
   );
 }
