@@ -28,12 +28,17 @@ export default function ExpandedItem() {
     };
 
     const params = useSearchParams();
+    let srcUrl = params.get("image");
+    console.log(srcUrl);
+    if (srcUrl == null) {
+        srcUrl = "image not found";
+    }
     return (
         <div className='flex flex-col h-screen grow'>
             <Navbar/>
             <div className="grid grid-cols-6 grow">
                 <div className='col-start-1 col-end-5 bg-black flex justify-center items-center relative m-[70px]'>
-                    <Image src={textbook} alt = "item image" fill={true} />
+                    <Image src={srcUrl} alt = "item image" fill={true} />
                 </div>
                 <div className='col-start-5 col-end-7 bg-red-500 flex flex-col m-6 border-black outline-2 rounded-md outline-offset-[10px]'>
                     <div className='bg-white h-1/2'>
