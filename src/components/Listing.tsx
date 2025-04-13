@@ -1,6 +1,7 @@
 import Image, { StaticImageData } from 'next/image'
 import textbooks from '../../public/textbooks.jpg'
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
+import { auth } from '@/lib/firebase';
 import Link from 'next/link';
 
 interface ListingData {
@@ -15,6 +16,15 @@ interface ListingData {
 
 const Listing = ({listing}:ListingData) => {
 
+    const [isLoggedIn,setIsLoggedIn] = useState(false);
+
+    useEffect(() => {
+        const unsubscribe = auth.onAuthStateChanged((user) => {
+            setIsLoggedIn(!!user);
+        });
+
+        return () => unsubscribe();
+    });
     const shortenDescription = () => {
         if (listing.description.length > 108) {
             let shortened:string = listing.description.substring(0,108);
@@ -29,10 +39,11 @@ const Listing = ({listing}:ListingData) => {
         }
     }
 
+    let pathname = isLoggedIn ? `/item/${listing.id}` : '/'
 
     return (
         <Link href={{
-            pathname: `/item/${listing.id}`,
+            pathname: pathname,
             query:{
                 title: listing.title,
                 price: listing.price,
