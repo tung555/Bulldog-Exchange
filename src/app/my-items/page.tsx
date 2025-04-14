@@ -91,7 +91,7 @@ export default function MyItemsPage() {
     <>
       <Navbar />
 
-      <div className="max-w-5xl mx-auto py-10 px-4">
+      <div className="max-w-5xl mx-auto py-10 px-4 min-h-screen">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-3xl font-bold">My Items</h1>
           <button
@@ -197,7 +197,7 @@ export default function MyItemsPage() {
           </div>
         </div>
       )}
-      <Footer />
+      <Footer/>
     </>
   );
 }
