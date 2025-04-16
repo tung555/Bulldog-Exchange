@@ -1,9 +1,8 @@
 'use client';
 import { useState } from 'react';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '@/lib/firebase';
-import Navbar from '@/components/Navbar';
+import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import Navbar from '@/components/Navbar';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -16,16 +15,17 @@ export default function LoginPage() {
     e.preventDefault();
     setError('');
 
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-      alert('Login successful!');
+    const res = await signIn('credentials', {
+      email,
+      password,
+      redirect: false,
+    });
+
+    if (res?.ok) {
+      alert('Login Successful');
       router.push('/');
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError('An unknown error occurred.');
-      }
+    } else {
+      setError('Invalid email or password');
     }
   };
 

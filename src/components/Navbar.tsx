@@ -2,32 +2,16 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import logo from '../../public/logo.png';
-import { auth } from '@/lib/firebase';
-import { signOut } from 'firebase/auth';
-import { useEffect, useState } from 'react';
+import { useSession, signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 
 const Navbar = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { data: session } = useSession();
   const router = useRouter();
 
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
-      setIsLoggedIn(!!user);
-    });
-
-    return () => unsubscribe();
-  }, []);
-
   const handleLogout = async () => {
-    try {
-      await signOut(auth);
-      setIsLoggedIn(false);
-      alert("Logout successful");
-      router.push('/'); // Redirect to home page
-    } catch (error) {
-      console.error('Logout failed:', error);
-    }
+    await signOut({ redirect: false });
+    router.push('/');
   };
 
   return (
@@ -47,6 +31,9 @@ const Navbar = () => {
             <Link href="/" className="text-black hover:bg-gray-900 hover:text-white rounded-md px-3 py-2">
               Home
             </Link>
+            <Link href="/MarketPlace" className="text-black hover:bg-gray-900 hover:text-white rounded-md px-3 py-2">
+              Marketplace
+            </Link>
             <Link href="/about" className="text-black hover:bg-gray-900 hover:text-white rounded-md px-3 py-2">
               About
             </Link>
@@ -54,16 +41,16 @@ const Navbar = () => {
               Contact
             </Link>
 
-            {isLoggedIn && (
-            <Link href="/my-items" className="text-black hover:bg-gray-900 hover:text-white rounded-md px-3 py-2">
-              My Items
-            </Link>
+            {session?.user && (
+              <Link href="/my-items" className="text-black hover:bg-gray-900 hover:text-white rounded-md px-3 py-2">
+                My Items
+              </Link>
             )}
           </div>
 
           {/* Right Side Auth Buttons */}
           <div className="hidden md:flex items-center space-x-3">
-            {!isLoggedIn ? (
+            {!session ? (
               <>
                 <Link
                   href="/login"
@@ -79,13 +66,12 @@ const Navbar = () => {
                 </Link>
               </>
             ) : (
-              <>
-                <button
-                  onClick={handleLogout}
-                  className="text-white bg-black hover:bg-gray-500 hover:text-white rounded-md px-3 py-2">
-                  Logout
-                  </button>
-              </>
+              <button
+                onClick={handleLogout}
+                className="text-white bg-black hover:bg-gray-500 hover:text-white rounded-md px-3 py-2"
+              >
+                Logout
+              </button>
             )}
           </div>
         </div>
