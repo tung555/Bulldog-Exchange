@@ -97,17 +97,23 @@ export default function MyItemsPage() {
 
   if (!user) {
     return (
-      <div className="min-h-screen flex items-center justify-center text-lg font-medium">
-        You must be logged in to view this page.
+      <div className="min-h-screen flex flex-col items-center justify-center text-lg font-medium text-center space-y-4">
+        <p>You must be logged in to view this page.</p>
+        <a
+          href="/login"
+          className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition"
+        >
+          Go to Login
+        </a>
       </div>
     );
-  }
+  }  
 
   return (
     <>
       <Navbar />
 
-      <div className="max-w-5xl mx-auto py-10 px-4">
+      <div className="max-w-5xl mx-auto py-10 px-4 min-h-screen">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-3xl font-bold">My Items</h1>
           <button
@@ -220,7 +226,7 @@ export default function MyItemsPage() {
         </div>
         
       )}
-      <Footer />
+      <Footer/>
     </>
   );
 }
