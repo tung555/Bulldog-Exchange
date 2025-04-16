@@ -6,6 +6,8 @@ import Navbar from '@/components/Navbar';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import Footer from '@/components/footer';
+import MapWrapper from '@/components/MapWrapper';
+import { MapMouseEvent } from '@vis.gl/react-google-maps';
 
 interface Item {
   _id: string;
@@ -20,11 +22,16 @@ export default function MyItemsPage() {
   const [items, setItems] = useState<Item[]>([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
+  const [showMap, setShowMap] = useState(false);
   const [formData, setFormData] = useState({
     title: '',
     condition: '',
     description: '',
     imageUrl: '',
+    position: {
+      lat: 0,
+      lng: 0
+    }
   });
 
   const router = useRouter();
@@ -60,6 +67,14 @@ export default function MyItemsPage() {
       [name]: value,
     }));
   };  
+  const handleMapChange = (e: MapMouseEvent) => {
+    if (e.detail.latLng) {
+      setFormData({...formData,position:{
+        lat: e.detail.latLng?.lat,
+        lng: e.detail.latLng?.lng,
+      }});
+    }
+  }
 
   const handlePostItem = async () => {
     if (!user) return;
@@ -72,10 +87,11 @@ export default function MyItemsPage() {
 
     if (res.ok) {
       setShowModal(false);
-      setFormData({ title: '', condition: '', description: '', imageUrl: '' });
+      setFormData({ title: '', condition: '', description: '', imageUrl: '', position: {lat: 0,lng: 0}});
       router.refresh();
     }
   };
+
 
   if (loading) return <div className="p-10 text-center">Loading...</div>;
 
@@ -138,8 +154,11 @@ export default function MyItemsPage() {
 
       {/* Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded p-6 max-w-md w-full shadow-lg">
+        <div className="fixed inset-0 bg-black bg-opacity-50 grid grid-cols-3 items-center justify-center z-50">
+          {showMap ? <div className='w-2/3 h-1/3 col-start-1 col-end-2 justify-self-end mr-[10px]'>
+            <MapWrapper clickEnabled={true} MapChange={handleMapChange}/>
+          </div> : null}
+          <div className="bg-white col-start-2 col-end-3 rounded p-6 max-w-md w-full shadow-lg">
             <h2 className="text-xl font-bold mb-4">Post New Item</h2>
 
             <input
@@ -179,7 +198,10 @@ export default function MyItemsPage() {
               onChange={handleChange}
               className="w-full border px-3 py-2 rounded mb-4"
             />
-
+            <button className='w-1/2 px-3 py-2 rounded mb-4 bg-gray-300 hover:bg-gray-400' onClick={() => setShowMap(!showMap)}>
+              Set Meetup Location
+            </button>
+            
             <div className="flex justify-end gap-3">
               <button
                 onClick={() => setShowModal(false)}
@@ -196,6 +218,7 @@ export default function MyItemsPage() {
             </div>
           </div>
         </div>
+        
       )}
       <Footer />
     </>
