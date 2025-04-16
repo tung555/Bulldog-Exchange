@@ -1,17 +1,39 @@
 'use client';
 import { useState } from 'react';
 import Navbar from '@/components/Navbar';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '@/lib/firebase';
+import { useRouter } from 'next/navigation';
 
 export default function SignupPage() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState('');
+  const router = useRouter();
 
-  //i will implement later
-  const handleSignup = (e: React.FormEvent) => {
+  const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Signing up with:', { name, email, password });
+    setError('');
+    
+    if (!email.endsWith('@uga.edu')) {
+      setError('Only @uga.edu emails are allowed for signup.');
+      return;
+    }
+
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      console.log('Firebase user created:', userCredential.user);
+      alert('Account created!');
+      router.push('/login');
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('An unknown error occurred.');
+      }
+    }
   };
 
   return (
@@ -23,6 +45,8 @@ export default function SignupPage() {
           <h2 className="text-3xl font-bold text-white mb-6 text-center">UGA Sign Up</h2>
 
           <form onSubmit={handleSignup} className="space-y-4">
+            {error && <p className="text-white text-sm bg-black/40 px-4 py-2 rounded">{error}</p>}
+
             <div>
               <label className="block text-white font-medium mb-1">Full Name</label>
               <input

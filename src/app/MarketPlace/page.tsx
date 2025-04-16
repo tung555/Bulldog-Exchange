@@ -1,34 +1,46 @@
 'use client';
 import { useState } from 'react';
 import Navbar from '@/components/Navbar';
-import Listing from '@/components/Listing'
-import Listings from '@/components/Listings'
+import Listing from '@/components/Listing';
+import Listings from '@/components/Listings';
+import Footer from '@/components/footer';
+import Image from 'next/image';
 
-export default function SignupPage() {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-
-  //i will implement later
-  const handleSignup = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log('Signing up with:', { name, email, password });
-  };
-
+export default function MarketPlace() {
   return (
     <>
       <Navbar />
 
-      <div className="min-h-screen bg-white flex-col justify-between px-4">
-        <div className="flex justify-center w-full max-w-md p-6 bg-white rounded-lg mt-10">
-            <h1 className="text-3xl font-bold text-red-500 mb-6 text-center">
-                BULLDOG MARKETPLACE
-            </h1>
-                       
-        </div>
-        <Listings/> 
-      </div>
+<div className="relative w-full h-[60vh] ">
+  <Image
+    src="/TateCenter.jpg"
+    alt="Background image of Tate Student Center"
+    layout="fill"
+    objectFit="cover"
+    className="opacity-80 object-[center_40%] z-0"
+    priority
+  />
+  <div className="absolute inset-0 flex flex-col items-center justify-center px-4 text-center">
+    <div className="absolute w-full h-15 top-31 bg-black opacity-40 z-5">
+    </div>
+    <h1 className="text-4xl md:text-5xl font-bold text-red-500 z-10 relative" style={{WebkitTextStroke: '1px black'}}>
+      BULLDOG MARKETPLACE
+    </h1>
+    <div className="mt-4 w-full max-w-md z-10">
+      <input
+        type="text"
+        placeholder="Search for items by type or title..."
+        className="w-full p-3 rounded-lg border border-gray-300 text-black shadow-md bg-white"
+      />
+    </div>
+  </div>
+</div>
+
+<div>
+  <Listings />
+</div>
+
+<Footer />
     </>
   );
 }
