@@ -1,70 +1,47 @@
-import Image, { StaticImageData } from 'next/image'
-import textbooks from '../../public/textbooks.jpg'
-import { useState,useEffect } from 'react';
-import { auth } from '@/lib/firebase';
+// components/Listing.tsx
+'use client';
+
+import Image from 'next/image';
 import Link from 'next/link';
 
-interface ListingData {
-    listing : {
-        id: number;
-        title: string;
-        price: number;
-        description: string;  
-        image: string  
-    }
+interface ListingProps {
+  item: {
+    _id: string;
+    title: string;
+    price: number;
+    condition: string;
+    description?: string;
+    imageUrl?: string;
+  };
 }
 
-const Listing = ({listing}:ListingData) => {
+const Listing = ({ item }: ListingProps) => {
+  const shortenDescription = (desc: string | undefined) => {
+    if (!desc) return '';
+    return desc.length > 100 ? desc.slice(0, 97) + '...' : desc;
+  };
 
-    const [isLoggedIn,setIsLoggedIn] = useState(false);
+  return (
+    <Link
+      href={`/item/${item._id}`}
+      className="bg-white border border-gray-200 rounded-lg p-4 shadow hover:shadow-md transition flex flex-col"
+    >
+      {item.imageUrl && (
+        <div className="relative w-full h-48 mb-3">
+          <Image
+            src={item.imageUrl}
+            alt={item.title}
+            fill
+            className="rounded object-cover"
+          />
+        </div>
+      )}
+      <h3 className="text-xl font-semibold mb-1">{item.title}</h3>
+      <p className="text-md text-red-600 font-bold">${item.price.toFixed(2)}</p>
+      <p className="text-sm italic text-gray-500">Condition: {item.condition}</p>
+      <p className="text-sm text-gray-600 mt-1">{shortenDescription(item.description)}</p>
+    </Link>
+  );
+};
 
-    useEffect(() => {
-        const unsubscribe = auth.onAuthStateChanged((user) => {
-            setIsLoggedIn(!!user);
-        });
-
-        return () => unsubscribe();
-    });
-    const shortenDescription = () => {
-        if (listing.description.length > 108) {
-            let shortened:string = listing.description.substring(0,108);
-            let lastFullWord:number = shortened.lastIndexOf(" ");
-            if (lastFullWord == -1) {
-                lastFullWord = 108
-            }
-            shortened = shortened.substring(0,lastFullWord);
-            return shortened += " ..."
-        } else {
-            return listing.description;
-        }
-    }
-
-    let pathname = isLoggedIn ? `/item/${listing.id}` : '/'
-
-    return (
-        <Link href={{
-            pathname: pathname,
-            query:{
-                title: listing.title,
-                price: listing.price,
-                description: listing.description,
-                image: listing.image
-            }
-        }} 
-        className="flex-col bg-red-500 h-90 min-w-2xs max-w-2xs rounded-md m-20 border-2">
-            <div className = "h-3/5 w-full rounded-sm relative">
-                <Image className = "rounded-sm" src={listing.image} fill={true} alt = "Used textbooks"/>        
-            </div>
-            
-            <div className='w-full h-2/5 p-[6px]'>
-                <div className='bg-white w-full h-full rounded-md text-left p-[5px]'>
-                    <p className='text-lg'>{listing.title}</p>
-                    <p className='text-md mb-[5px]'>${listing.price}</p>
-                    <p className='text-sm'>{shortenDescription()}</p>
-                </div>
-            </div>
-        </Link>
-    )
-}
-
-export default Listing
+export default Listing;

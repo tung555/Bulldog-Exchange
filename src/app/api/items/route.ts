@@ -6,13 +6,10 @@ export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const uid = searchParams.get('uid');
 
-  if (!uid) {
-    return NextResponse.json({ error: 'Missing uid' }, { status: 400 });
-  }
-
   try {
     await connectMongoDB();
-    const items = await Item.find({ ownerUid: uid });
+    const query = uid ? { ownerUid: uid } : {};
+    const items = await Item.find(query).sort({ createdAt: -1 }); // Sort by latest first
     return NextResponse.json(items, { status: 200 });
   } catch (error) {
     return NextResponse.json({ error: 'Failed to fetch items' }, { status: 500 });
@@ -21,14 +18,22 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    const { ownerUid, title, condition, description, imageUrl } = await req.json();
+    const { ownerUid, title, price, condition, description, imageUrl, position } = await req.json();
 
-    if (!ownerUid || !title || !condition) {
+    if (!ownerUid || !title || price == null || !condition) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
     await connectMongoDB();
-    const newItem = await Item.create({ ownerUid, title, condition, description, imageUrl });
+    const newItem = await Item.create({
+      ownerUid,
+      title,
+      price,
+      condition,
+      description,
+      imageUrl,
+      position,
+    });
 
     return NextResponse.json(newItem, { status: 201 });
   } catch (error) {

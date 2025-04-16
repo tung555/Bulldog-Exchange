@@ -1,8 +1,6 @@
 'use client';
 import { useState } from 'react';
 import Navbar from '@/components/Navbar';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '@/lib/firebase';
 import { useRouter } from 'next/navigation';
 
 export default function SignupPage() {
@@ -16,23 +14,29 @@ export default function SignupPage() {
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-    
+
     if (!email.endsWith('@uga.edu')) {
       setError('Only @uga.edu emails are allowed for signup.');
       return;
     }
 
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      console.log('Firebase user created:', userCredential.user);
-      alert('Account created!');
-      router.push('/login');
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError('An unknown error occurred.');
+      const res = await fetch('/api/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, password }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.error || 'Something went wrong.');
+        return;
       }
+
+      alert('Account created! You can now log in.');
+      router.push('/login');
+    } catch (err) {
+      setError('An unexpected error occurred.');
     }
   };
 
