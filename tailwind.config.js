@@ -4,8 +4,13 @@ module.exports = {
       "./src/**/*.{js,ts,jsx,tsx}",
     ],
     theme: {
-      extend: {},
+      extend: {
+        fontFamily: {
+          coiny: ['"Coiny"', 'system-ui'],
+          lilita: ['"Lilita One"', 'cursive'],
+      },
     },
+  },
     plugins: [],
   };
   
