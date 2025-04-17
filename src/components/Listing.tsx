@@ -8,7 +8,7 @@ interface ListingProps {
   item: {
     _id: string;
     title: string;
-    price: number;
+    price?: number;
     condition: string;
     description?: string;
     imageUrl?: string;
@@ -37,7 +37,9 @@ const Listing = ({ item }: ListingProps) => {
         </div>
       )}
       <h3 className="text-xl font-semibold mb-1">{item.title}</h3>
-      <p className="text-md text-red-600 font-bold">${item.price.toFixed(2)}</p>
+      <p className="text-md text-red-600 font-bold">
+        {typeof item.price === 'number' ? `$${item.price.toFixed(2)}` : 'Price not available'}
+      </p>
       <p className="text-sm italic text-gray-500">Condition: {item.condition}</p>
       <p className="text-sm text-gray-600 mt-1">{shortenDescription(item.description)}</p>
     </Link>
