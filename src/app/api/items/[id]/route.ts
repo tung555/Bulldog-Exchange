@@ -6,7 +6,8 @@ export async function GET(
   req: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  const { id } = params;
+  const storeParams = await params;
+  const { id } = storeParams;
 
   try {
     await connectMongoDB();
