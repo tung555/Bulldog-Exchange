@@ -8,6 +8,7 @@ import Link from 'next/link';
 import Footer from '@/components/footer';
 import MapWrapper from '@/components/MapWrapper';
 import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
 interface Item {
   title: string;
@@ -20,6 +21,8 @@ interface Item {
     lng: number;
   };
 }
+
+const router = useRouter();
 
 export default function ExpandedItem() {
   const [item, setItem] = useState<Item | null>(null);
@@ -42,14 +45,31 @@ export default function ExpandedItem() {
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
-    const { name, value } = e.target;
-    setOfferPrice((prev) => name);
+    setOfferPrice(e.target.value);
   };
 
-  const submitOffer = () => {
+  const submitOffer = async () => {
+    if (!session?.user?.id) return;
     alert(offerPlaced ? 'Offer Removed' : 'Offer Submitted');
     setOfferPlaced((prev) => !prev);
-    
+
+    const res = await fetch('/api/offer', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        offerer_id: session.user.id,
+        offerer_name: session.user.name,
+        owner_id: item.ownerUid,
+        item_id: itemId,
+        title: item.title,
+        price: offerPrice,
+        status: "pending"
+      }),
+    });
+
+    if (res.ok) {
+      router.refresh();
+    }
   };
 
   if (status === 'loading') {
