@@ -8,6 +8,8 @@ import { useState, useEffect } from 'react';
 
 export default function MarketPlace() {
   const [searchQuery, setSearchQuery] = useState('');
+  const [minPrice, setMinPrice] = useState(''); // Minimum price
+  const [maxPrice, setMaxPrice] = useState(''); // Maximum price
   const [filteredData, setFilteredData] = useState([]);
   const [allListings, setAllListings] = useState([]);
 
@@ -28,9 +30,12 @@ export default function MarketPlace() {
   }, []);
 
   const handleSearch = () => {
-    const filtered = allListings.filter((item) =>
-      item.title.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    const filtered = allListings.filter((item) => {
+      const matchesQuery = item.title.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesMinPrice = minPrice === '' || item.price >= parseFloat(minPrice);
+      const matchesMaxPrice = maxPrice === '' || item.price <= parseFloat(maxPrice);
+      return matchesQuery && matchesMinPrice && matchesMaxPrice;
+    });
     setFilteredData(filtered);
   };
 
@@ -56,6 +61,7 @@ export default function MarketPlace() {
             BULLDOG MARKETPLACE
           </h1>
           <div className="mt-4 w-full max-w-md z-10">
+            {/* Search Input */}
             <input
               type="text"
               placeholder="Search for items by type or title..."
@@ -63,9 +69,28 @@ export default function MarketPlace() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
+
+            {/* Price Range Inputs */}
+            <div className="flex gap-2 mt-4">
+              <input
+                type="number"
+                placeholder="Min Price"
+                className="w-1/2 p-3 rounded-lg border border-gray-300 text-black shadow-md bg-white"
+                value={minPrice}
+                onChange={(e) => setMinPrice(e.target.value)}
+              />
+              <input
+                type="number"
+                placeholder="Max Price"
+                className="w-1/2 p-3 rounded-lg border border-gray-300 text-black shadow-md bg-white"
+                value={maxPrice}
+                onChange={(e) => setMaxPrice(e.target.value)}
+              />
+            </div>
+
             <button
               onClick={handleSearch}
-              className="mt-2 px-4 py-2 bg-red-500 text-white rounded-lg"
+              className="mt-4 px-4 py-2 bg-red-500 text-white rounded-lg"
             >
               Search
             </button>
