@@ -20,6 +20,8 @@ interface Item {
 export default function MyItemsPage() {
   const { data: session, status } = useSession();
   const [items, setItems] = useState<Item[]>([]);
+  const [filteredItems, setFilteredItems] = useState<Item[]>([]); // State for filtered items
+  const [searchQuery, setSearchQuery] = useState(''); // State for search query
   const [showModal, setShowModal] = useState(false);
   const [showMap, setShowMap] = useState(false);
   const [formData, setFormData] = useState({
@@ -40,7 +42,10 @@ export default function MyItemsPage() {
     if (status === 'authenticated' && session?.user?.id) {
       fetch(`/api/items?uid=${session.user.id}`)
         .then((res) => res.json())
-        .then((data) => setItems(data))
+        .then((data) => {
+          setItems(data);
+          setFilteredItems(data); // Initialize filtered items with all items
+        })
         .catch((error) => console.error('Failed to fetch items:', error));
     }
   }, [session, status]);
@@ -91,6 +96,13 @@ export default function MyItemsPage() {
     }
   };
 
+  const handleSearch = () => {
+    const filtered = items.filter((item) =>
+      item.title.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    setFilteredItems(filtered);
+  };
+
   if (status === 'loading') return <div className="p-10 text-center">Loading...</div>;
 
   if (status === 'unauthenticated') {
@@ -121,11 +133,28 @@ export default function MyItemsPage() {
           </button>
         </div>
 
-        {items.length === 0 ? (
-          <p className="text-gray-500">You haven't posted any items yet.</p>
+        {/* Search Bar */}
+        <div className="mb-6">
+          <input
+            type="text"
+            placeholder="Search your items by title..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full p-3 rounded-lg border border-gray-300 text-black shadow-md bg-white"
+          />
+          <button
+            onClick={handleSearch}
+            className="mt-2 px-4 py-2 bg-red-500 text-white rounded-lg"
+          >
+            Search
+          </button>
+        </div>
+
+        {filteredItems.length === 0 ? (
+          <p className="text-gray-500">No items found.</p>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {items.map((item) => (
+            {filteredItems.map((item) => (
               <div
                 key={item._id}
                 className="bg-white border border-gray-200 p-4 rounded shadow"
