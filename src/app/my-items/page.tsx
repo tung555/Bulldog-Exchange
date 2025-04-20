@@ -15,15 +15,18 @@ interface Item {
   condition: string;
   description?: string;
   imageUrl?: string;
+  position?: {
+    lat: number;
+    lng: number;
+  };
 }
 
 export default function MyItemsPage() {
   const { data: session, status } = useSession();
   const [items, setItems] = useState<Item[]>([]);
-  const [filteredItems, setFilteredItems] = useState<Item[]>([]); // State for filtered items
-  const [searchQuery, setSearchQuery] = useState(''); // State for search query
   const [showModal, setShowModal] = useState(false);
   const [showMap, setShowMap] = useState(false);
+  const [editingItemId, setEditingItemId] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     title: '',
     price: '',
@@ -38,15 +41,17 @@ export default function MyItemsPage() {
 
   const router = useRouter();
 
+  const fetchItems = async () => {
+    if (session?.user?.id) {
+      const res = await fetch(`/api/items?uid=${session.user.id}`);
+      const data = await res.json();
+      setItems(data);
+    }
+  };
+
   useEffect(() => {
-    if (status === 'authenticated' && session?.user?.id) {
-      fetch(`/api/items?uid=${session.user.id}`)
-        .then((res) => res.json())
-        .then((data) => {
-          setItems(data);
-          setFilteredItems(data); // Initialize filtered items with all items
-        })
-        .catch((error) => console.error('Failed to fetch items:', error));
+    if (status === 'authenticated') {
+      fetchItems();
     }
   }, [session, status]);
 
@@ -72,18 +77,22 @@ export default function MyItemsPage() {
   const handlePostItem = async () => {
     if (!session?.user?.id) return;
 
-    const res = await fetch('/api/items', {
-      method: 'POST',
+    const url = editingItemId ? `/api/items/${editingItemId}` : '/api/items';
+    const method = editingItemId ? 'PUT' : 'POST';
+
+    const res = await fetch(url, {
+      method,
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         ...formData,
         price: parseFloat(formData.price),
-        ownerUid: session.user.id
+        ownerUid: session.user.id,
       }),
     });
 
     if (res.ok) {
       setShowModal(false);
+      setEditingItemId(null);
       setFormData({
         title: '',
         price: '',
@@ -92,15 +101,34 @@ export default function MyItemsPage() {
         imageUrl: '',
         position: { lat: 0, lng: 0 },
       });
-      router.refresh();
+      fetchItems();
     }
   };
 
-  const handleSearch = () => {
-    const filtered = items.filter((item) =>
-      item.title.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-    setFilteredItems(filtered);
+  const handleEdit = (item: Item) => {
+    setEditingItemId(item._id);
+    setFormData({
+      title: item.title,
+      price: item.price.toString(),
+      condition: item.condition,
+      description: item.description || '',
+      imageUrl: item.imageUrl || '',
+      position: item.position || { lat: 0, lng: 0 },
+    });
+    setShowModal(true);
+  };
+
+  const handleDelete = async (itemId: string) => {
+    const confirmed = window.confirm('Are you sure you want to delete this item?');
+    if (!confirmed) return;
+
+    const res = await fetch(`/api/items/${itemId}`, {
+      method: 'DELETE',
+    });
+
+    if (res.ok) {
+      fetchItems();
+    }
   };
 
   if (status === 'loading') return <div className="p-10 text-center">Loading...</div>;
@@ -126,35 +154,29 @@ export default function MyItemsPage() {
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-3xl font-bold">My Items</h1>
           <button
-            onClick={() => setShowModal(true)}
+            onClick={() => {
+              setShowModal(true);
+              setEditingItemId(null);
+              setFormData({
+                title: '',
+                price: '',
+                condition: '',
+                description: '',
+                imageUrl: '',
+                position: { lat: 0, lng: 0 },
+              });
+            }}
             className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
           >
             Add Item
           </button>
         </div>
 
-        {/* Search Bar */}
-        <div className="mb-6">
-          <input
-            type="text"
-            placeholder="Search your items by title..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full p-3 rounded-lg border border-gray-300 text-black shadow-md bg-white"
-          />
-          <button
-            onClick={handleSearch}
-            className="mt-2 px-4 py-2 bg-red-500 text-white rounded-lg"
-          >
-            Search
-          </button>
-        </div>
-
-        {filteredItems.length === 0 ? (
-          <p className="text-gray-500">No items found.</p>
+        {items.length === 0 ? (
+          <p className="text-gray-500">You haven't posted any items yet.</p>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {filteredItems.map((item) => (
+            {items.map((item) => (
               <div
                 key={item._id}
                 className="bg-white border border-gray-200 p-4 rounded shadow"
@@ -174,6 +196,20 @@ export default function MyItemsPage() {
                     />
                   </div>
                 )}
+                <div className="mt-4 flex gap-3">
+                  <button
+                    onClick={() => handleEdit(item)}
+                    className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleDelete(item._id)}
+                    className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
+                  >
+                    Delete
+                  </button>
+                </div>
               </div>
             ))}
           </div>
@@ -188,7 +224,9 @@ export default function MyItemsPage() {
             </div>
           )}
           <div className="bg-white col-start-2 col-end-3 rounded p-6 max-w-md w-full shadow-lg">
-            <h2 className="text-xl font-bold mb-4">Post New Item</h2>
+            <h2 className="text-xl font-bold mb-4">
+              {editingItemId ? 'Edit Item' : 'Post New Item'}
+            </h2>
 
             <input
               type="text"
@@ -257,7 +295,7 @@ export default function MyItemsPage() {
                 onClick={handlePostItem}
                 className="px-4 py-2 rounded bg-black text-white hover:bg-gray-800"
               >
-                Post Item
+                {editingItemId ? 'Update Item' : 'Post Item'}
               </button>
             </div>
           </div>
