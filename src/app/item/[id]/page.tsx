@@ -24,6 +24,7 @@ interface Item {
 export default function ExpandedItem() {
   const [item, setItem] = useState<Item | null>(null);
   const [offerPlaced, setOfferPlaced] = useState(false);
+  const [offerPrice, setOfferPrice] = useState('');
   const params = useParams();
   const itemId = params?.id as string;
 
@@ -38,9 +39,17 @@ export default function ExpandedItem() {
     }
   }, [itemId, status]);
 
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+    setOfferPrice((prev) => name);
+  };
+
   const submitOffer = () => {
     alert(offerPlaced ? 'Offer Removed' : 'Offer Submitted');
     setOfferPlaced((prev) => !prev);
+    
   };
 
   if (status === 'loading') {
@@ -106,6 +115,8 @@ export default function ExpandedItem() {
           </div>
 
           <div className="h-1/6 bg-white flex justify-evenly items-center text-white">
+            <input name="offerInput" className="border-black-2" onChange={handleChange} required min="0">
+            </input>
             <button
               className="cursor-pointer bg-red-500 h-3/5 w-1/5 text-center flex justify-center items-center rounded-md"
               onClick={submitOffer}
