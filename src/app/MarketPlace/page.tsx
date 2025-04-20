@@ -4,8 +4,36 @@ import Navbar from '@/components/Navbar';
 import Listings from '@/components/Listings';
 import Footer from '@/components/footer';
 import Image from 'next/image';
+import { useState, useEffect } from 'react';
 
 export default function MarketPlace() {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filteredData, setFilteredData] = useState([]);
+  const [allListings, setAllListings] = useState([]);
+
+  useEffect(() => {
+    // Fetch all listings when the component mounts
+    const fetchListings = async () => {
+      try {
+        const res = await fetch('/api/listings');
+        const data = await res.json();
+        setAllListings(data);
+        setFilteredData(data); // Initialize filtered data with all listings
+      } catch (err) {
+        console.error('Error fetching listings:', err);
+      }
+    };
+
+    fetchListings();
+  }, []);
+
+  const handleSearch = () => {
+    const filtered = allListings.filter((item) =>
+      item.title.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    setFilteredData(filtered);
+  };
+
   return (
     <>
       <Navbar />
@@ -32,13 +60,21 @@ export default function MarketPlace() {
               type="text"
               placeholder="Search for items by type or title..."
               className="w-full p-3 rounded-lg border border-gray-300 text-black shadow-md bg-white"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
             />
+            <button
+              onClick={handleSearch}
+              className="mt-2 px-4 py-2 bg-red-500 text-white rounded-lg"
+            >
+              Search
+            </button>
           </div>
         </div>
       </div>
 
       <div className="px-4 py-10 max-w-7xl mx-auto">
-        <Listings />
+        <Listings items={filteredData} />
       </div>
 
       <Footer />
