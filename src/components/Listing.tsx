@@ -3,6 +3,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
+import Card from '@/components/Card'
 
 interface ListingProps {
   item: {
@@ -22,6 +23,7 @@ const Listing = ({ item }: ListingProps) => {
   };
 
   return (
+    <Card>
     <Link
       href={`/item/${item._id}`}
       className="bg-white border border-gray-200 rounded-lg p-4 shadow hover:shadow-md transition flex flex-col"
@@ -43,6 +45,7 @@ const Listing = ({ item }: ListingProps) => {
       <p className="text-sm italic text-gray-500">Condition: {item.condition}</p>
       <p className="text-sm text-gray-600 mt-1">{shortenDescription(item.description)}</p>
     </Link>
+    </Card>
   );
 };
 
