@@ -23,7 +23,7 @@ interface Item {
 
 export default function ExpandedItem() {
   const [item, setItem] = useState<Item | null>(null);
-  const [addrInfo, setAddrInfo] = useState({name:"",country:"",state_code:"",city:"",postcode:"",street:""});
+  const [addrInfo, setAddrInfo] = useState({address_line1:"",state_code:"",city:"",postcode:""});
   const [offerPlaced, setOfferPlaced] = useState(false);
   const [showAddress, setShowAddress] = useState(false);
   const params = useParams();
@@ -46,12 +46,11 @@ export default function ExpandedItem() {
               console.log(newData);
               setAddrInfo(
                 {
-                  name: newData.features[0].properties.name,
-                  country: newData.features[0].properties.country,
+                  address_line1: newData.features[0].properties.address_line1,
                   state_code: newData.features[0].properties.state_code,
                   city: newData.features[0].properties.city,
                   postcode: newData.features[0].properties.postcode,
-                  street: newData.features[0].properties.street,
+
                 })
               })
            .catch((err) => console.log("Error fetching address data"));
@@ -120,8 +119,8 @@ export default function ExpandedItem() {
               <p className="text-4xl mb-3">{item.title}</p>
               <button className= 'p-3 bg-red-500 rounded-md text-white cursor-pointer mr-3' onClick={()=>{setShowAddress(!showAddress)}}>
                 Show Address
-                {showAddress && (<div className='text-wrap text-left min-w-[100px] cursor-default text-black absolute p-3 bg-gray-200 rounded-md text-sm mt-[30px] right-[50px]'>
-                  {addrInfo.name},{addrInfo.street}<br/>City: {addrInfo.city}<br/>State, Country: {addrInfo.state_code}, {addrInfo.country}
+                {showAddress && (<div className='text-wrap text-left min-w-[150px] cursor-default text-black absolute p-3 bg-gray-200 rounded-md text-sm mt-[30px] right-[50px]'>
+                  {addrInfo.address_line1}<br/>City: {addrInfo.city}, {addrInfo.postcode}<br/>State: {addrInfo.state_code}
                 </div>)}
               </button>
             </div>
@@ -130,7 +129,7 @@ export default function ExpandedItem() {
             <p className="text-md">{item.description}</p>
           </div>
 
-          <div className="bg-blue-600 h-3/6 m-[20px] relative">
+          <div className="bg-blue-600 h-3/6 m-[10px] relative">
             <MapWrapper
               clickEnabled={false}
               initialPosition={item.position || { lat: 33.950001, lng: -83.383331 }}
