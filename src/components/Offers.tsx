@@ -35,9 +35,10 @@ export default function Offers() {
   useEffect(() => {
     const fetchOffers = async () => {
       try {
-        const res = await fetch('/api/listings');
+        const res = await fetch('/api/offer');
         const data = await res.json();
         setOffers(data);
+        console.log(offers.length);
       } catch (err) {
         console.error('Failed to load offers:', err);
       } finally {
@@ -49,6 +50,10 @@ export default function Offers() {
   }, []);
 
   if (loading) return <div className="text-center py-10">Loading offers...</div>;
+
+  if (!offers.length) {
+    return <div className="text-center py-10">No offers found</div>;
+  }
 
   return (
     <div className="max-w-6xl mx-auto py-8 px-4 flex flex-col gap-6">

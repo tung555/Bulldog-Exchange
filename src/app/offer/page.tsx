@@ -7,6 +7,8 @@ import { useRouter } from 'next/navigation';
 import Footer from '@/components/footer';
 import MapWrapper from '@/components/MapWrapper';
 import { MapMouseEvent } from '@vis.gl/react-google-maps';
+import Offers from '@/components/Offers';
+import Offer from '@/components/Offer';
 
 interface Item {
   _id: string;
@@ -110,7 +112,10 @@ export default function OffersPage() {
   return (
     <>
       <Navbar />
-      
+      <div className="max-w-5xl mx-auto py-10 px-4 min-h-screen">
+      <Offers />
+
+      </div>
       <Footer />
     </>
   );

@@ -1,5 +1,5 @@
 'use client';
-import connectMongoDB from '@/lib/mongodb';
+import connectMongoDB from '../../mongodb';
 import Navbar from '../components/Navbar';
 import Image from 'next/image';
 import Link from 'next/link';

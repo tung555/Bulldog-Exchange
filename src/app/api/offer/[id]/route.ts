@@ -1,0 +1,46 @@
+// app/api/offer/[id]/route.ts
+import { NextRequest, NextResponse } from 'next/server';
+import connectMongoDB from '../../../../../mongodb';
+import Offer from '@/models/offer';
+import mongoose from "mongoose";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import { useParams } from "next/navigation";
+
+interface RouteParams {
+    params: { id: string };
+  }
+
+export async function PUT(req: NextRequest, { params }: RouteParams) {
+  const { id } = params;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return NextResponse.json({ error: 'Invalid offer ID' }, { status: 400 });
+  }
+
+  try {
+    await connectMongoDB();
+
+    const { status } = await req.json();
+
+    if (!status) {
+      return NextResponse.json({ error: 'Status is required' }, { status: 400 });
+    }
+
+    const updatedOffer = await Offer.findByIdAndUpdate(
+      id,
+      { status },
+    );
+
+    if (!updatedOffer) {
+      return NextResponse.json({ error: 'Offer not found' }, { status: 404 });
+    }
+
+    return NextResponse.json(updatedOffer, { status: 200 });
+  } catch (error) {
+    console.error('Error updating offer status:', error);
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+  }
+}

@@ -11,7 +11,9 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 
 interface Item {
-  title: string;
+  _id?: string;
+  ownerUid: string, 
+  title?: string;
   price: number;
   condition: string;
   description?: string;
@@ -22,7 +24,6 @@ interface Item {
   };
 }
 
-const router = useRouter();
 
 export default function ExpandedItem() {
   const [item, setItem] = useState<Item | null>(null);
@@ -30,6 +31,7 @@ export default function ExpandedItem() {
   const [offerPrice, setOfferPrice] = useState('');
   const params = useParams();
   const itemId = params?.id as string;
+  const router = useRouter();
 
   const { data: session, status } = useSession();
 
@@ -103,6 +105,7 @@ export default function ExpandedItem() {
   }
 
   return (
+    
     <div className="flex flex-col h-screen grow">
       <Navbar />
       <div className="grid grid-cols-6 grow">
@@ -135,7 +138,7 @@ export default function ExpandedItem() {
           </div>
 
           <div className="h-1/6 bg-white flex justify-evenly items-center text-white">
-            <input name="offerInput" className="border-black-2" onChange={handleChange} required min="0">
+            <input name="offerInput" className="p-1 text-black border-black-2 bg-gray-50" onChange={handleChange} required placeholder="Offer here" min="0 value=''">
             </input>
             <button
               className="cursor-pointer bg-red-500 h-3/5 w-1/5 text-center flex justify-center items-center rounded-md"

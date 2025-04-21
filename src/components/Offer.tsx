@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useSession} from 'next-auth/react';
-
+import { useRouter, useParams } from 'next/navigation';
 
 
 interface OfferProps {
@@ -27,11 +27,25 @@ interface OfferProps {
   }
 
 
+  const submitOffer = async (newStatus: string) => {
+    const router = useRouter();
+    const res = await fetch('/api/offer/${offer._id}', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+       status: newStatus,
+      }),
+    });
+
+    if (res.ok) {
+      router.refresh();
+    }
+  };
 
 const Offer = ({offer, item }: OfferProps) => {
 
  const { data: session, status } = useSession();
-
+ const router = useRouter();
   return (
     <div>
     <Link
@@ -56,11 +70,11 @@ const Offer = ({offer, item }: OfferProps) => {
             <div>
                 <h3 className="text-xl font-semibold mb-1">Offer of: {offer.price} by {offer.offerer_name}</h3>
                 {session?.user.id === offer.owner_id && (<div>
-                <button className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
+                <button onClick={() => submitOffer('accepted')} className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
                 Accept
                 </button>
 
-                <button className="bg-red-500 text-white px-4 py-2 rounded hover:bg-green-600">
+                <button onClick={() => submitOffer('rejected')} className="bg-red-500 text-white px-4 py-2 rounded hover:bg-green-600">
                 Reject
                 </button>
                 </div>

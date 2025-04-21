@@ -1,7 +1,7 @@
 // app/api/signup/route.ts
 import { NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
-import connectMongoDB from '@/lib/mongodb';
+import connectMongoDB from '../../../../mongodb';
 import User from '@/models/user';
 
 export async function POST(req: Request) {
