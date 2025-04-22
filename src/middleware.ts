@@ -18,6 +18,9 @@ export async function middleware(request:NextRequest) {
 export const config = {
     matcher: [
         "/my-items",
-        "/item/:id*"
+        "/item/:id*",
+        "/offer",
+        "/offer/:id*",
+        "/offer/user/:userId*"
     ]
 }
