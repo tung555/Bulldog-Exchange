@@ -25,11 +25,12 @@ interface OfferProps {
       description?: string;
       imageUrl?: string;
     };
+    onDelete?: () => void;
   }
 
   
 
-const Offer = ({offer, item }: OfferProps) => {
+const Offer = ({offer, item, onDelete }: OfferProps) => {
   const [offerStatus, setOfferStatus] = useState(offer.status);
 
   const submitOffer = async (newStatus: string) => {
@@ -48,11 +49,23 @@ const Offer = ({offer, item }: OfferProps) => {
     }
   };
 
+    const deleteOffer = async () => {
+      
+      const res = await fetch(`/api/offer/${offer._id}`, {
+        method: 'DELETE',
+      });
+  
+      if (res.ok) {
+        alert('Offer deleted successfully!');
+        if(onDelete) onDelete();
+      }
+    };
+
 
  const { data: session, status } = useSession();
  const router = useRouter();
  
- if (!item || !item._id) return null;
+ if (!offer ||!item || !offer._id || !item._id) return null;
 
   return (
     <div className="border-3 border-black rounded-tl-4xl rounded-br-3xl rounded-bl-md rounded-tr-sm max-w-fit shadow-xl mb-5 bg-black">
@@ -129,7 +142,9 @@ const Offer = ({offer, item }: OfferProps) => {
       {offerStatus}
     </p>
     </div>
-
+    <button 
+    onClick={() => deleteOffer()}
+    className="bg-gray-100 border-1 border-black text-black text-sm mt-1 px-1 rounded hover:bg-gray-300">Delete Offer</button>
   </div>
 )}
             </div>

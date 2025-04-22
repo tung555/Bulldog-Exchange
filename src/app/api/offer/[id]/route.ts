@@ -49,3 +49,32 @@ export async function PUT(req: NextRequest, { params }: RouteParams) {
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }
+
+export async function DELETE(req: NextRequest, { params }: RouteParams) {
+  const { id } = params;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return NextResponse.json({ error: 'Invalid offer ID' }, { status: 400 });
+  }
+
+  try {
+    await connectMongoDB();
+
+    const session = await getServerSession(authOptions);
+    if (!session || !session.user?.id) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const offer = await Offer.findById(id);
+    if (!offer) {
+      return NextResponse.json({ error: 'Offer not found' }, { status: 404 });
+    }
+
+    await Offer.findByIdAndDelete(id);
+
+    return NextResponse.json({ message: 'Offer deleted successfully' }, { status: 200 });
+  } catch (error) {
+    console.error('Error deleting offer:', error);
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+  }
+}

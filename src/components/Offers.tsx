@@ -33,8 +33,9 @@ export default function Offers() {
   const [loading, setLoading] = useState(true);
   
 
-  useEffect(() => {
+
     const fetchOffers = async () => {
+      setLoading(true);
       try {
         const res = await fetch('/api/offer');
         const data = await res.json();
@@ -47,6 +48,7 @@ export default function Offers() {
       }
     };
 
+  useEffect(() => {
     fetchOffers();
   }, []);
 
@@ -59,7 +61,16 @@ export default function Offers() {
   return (
     <div className="mx-auto mt-2  flex flex-col">
       {offers.map(({offer, item}) => (
-        <Offer key={offer.item_id} offer={offer} item={item}  />
+         <Offer
+         key={offer._id}
+         offer={offer}
+         item={item}
+         onDelete={() =>
+           setOffers((prev) =>
+             prev.filter((o) => o.offer._id !== offer._id)
+           )
+         }
+       />
       ))}
     </div>
   );
