@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import User from '@/models/user';
-import connectMongoDB from '@/lib/mongodb';
+import connectMongoDB from '../../../../../mongodb';
 
 export async function POST(req: Request) {
   const { token, password } = await req.json();

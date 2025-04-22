@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import User from '@/models/user';
-import connectMongoDB from '@/lib/mongodb';
+import connectMongoDB from '../../../../../mongodb';
 import jwt from 'jsonwebtoken';
 import nodemailer from 'nodemailer';
 
