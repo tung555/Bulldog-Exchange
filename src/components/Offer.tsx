@@ -51,42 +51,52 @@ const Offer = ({offer, item }: OfferProps) => {
 
  const { data: session, status } = useSession();
  const router = useRouter();
+ 
+ if (!item || !item._id) return null;
+
   return (
-    <div className="flex items-center border border-black-200 rounded-lg max-w-fit p-2">
+    <div className="border-3 border-black rounded-tl-4xl rounded-br-3xl rounded-bl-md rounded-tr-sm max-w-fit shadow-xl mb-5 bg-black">
+    <div className="flex items-center border-2 border-red-600 rounded-tl-4xl rounded-br-3xl rounded-bl-md rounded-tr-sm max-w-fit shadow-xl h-55 bg-gray-50 pl-2">
     <Link
       href={`/item/${item._id}`}
       className="bg-white rounded-lg p-1 shadow hover:shadow-md transition"
     >
       {item.imageUrl ? (
-  <div className="relative w-48 h-48">
+  <div className="relative w-48 h-48 ml-1">
     <Image
       src={item.imageUrl}
       alt={item.title}
       fill
-      className="rounded object-cover"
+      className="rounded object-cover hover:shadow-2xl"
     />
   </div>
 ) : (
-  <div className="relative w-48 h-48 bg-gray-200 text-gray-500 flex items-center justify-center rounded">
-    <span className="text-sm">No image available</span>
+  <div className="ml-1 relative w-48 h-48 bg-gray-200 text-gray-500 flex items-center justify-center rounded">
+    <span className="text-sm shadow-2xl">No image available</span>
   </div>
 )}
 
       </Link>
 
       
-      <div className="flex flex-col border border-black-100 ml-5 rounded-lg mr-3">
-        <h1 className="text-2xl font-bold pl-2 mt-1">{item.title}</h1>
+      <div className="flex flex-col border-3 border-black ml-5 rounded-md max-w-fit p-2 mb-3 mr-2 bg-white">
+        <h1 className="text-2xl font-bold pl-2 mt-1 pr-2">{item.title}</h1>
             <div className="p-2">
                 <h3 className="text-xl font-medium mb-1">Offer of ${offer.price} by {offer.offerer_name}</h3>
                 {session?.user.id === offer.owner_id && (
   <div className="flex flex-col gap-2 items-start">
-    <p className={`text-md font-medium ${
+    <div className="inline-flex">
+    <p className={`text-md font-medium  ${
       offerStatus === 'accepted' ? 'text-green-600' : 'text-red-600'
     }`}>
-      Current Status: {offerStatus}
+      Current Status:&nbsp; 
     </p>
-
+    <p className={`text-md font-bold  ${
+      offerStatus === 'accepted' ? 'text-green-600' : 'text-red-600'
+    }`}>
+      {offerStatus}
+    </p>
+    </div>
     <div className="flex gap-2">
       <button
         onClick={() => submitOffer('accepted')}
@@ -107,16 +117,24 @@ const Offer = ({offer, item }: OfferProps) => {
 
 {session?.user.id === offer.offerer_id && session?.user.id !== offer.owner_id && (
   <div className="flex flex-col gap-2 items-start">
-    <p className={`text-md font-medium ${
+    <div className="inline-flex">
+    <p className={`text-md font-medium  ${
       offerStatus === 'accepted' ? 'text-green-600' : 'text-red-600'
     }`}>
-      Current Status: {offerStatus}
+      Current Status:&nbsp; 
     </p>
+    <p className={`text-md font-bold  ${
+      offerStatus === 'accepted' ? 'text-green-600' : 'text-red-600'
+    }`}>
+      {offerStatus}
+    </p>
+    </div>
 
   </div>
 )}
             </div>
       </div>
+    </div>
     </div>
   );
 };

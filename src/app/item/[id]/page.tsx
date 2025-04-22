@@ -101,7 +101,7 @@ export default function ExpandedItem() {
 
     if (res.ok) {
       alert('Offer submitted successfully!');
-      router.refresh();
+      router.push('/MarketPlace');
     }
   };
 

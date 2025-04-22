@@ -43,7 +43,7 @@ export default function MarketPlace() {
     <>
       <Navbar />
 
-      <div className="relative w-full h-[60vh]">
+      <div className="relative w-full h-[60vh] shadow-2xl">
         <Image
           src="/TateCenter.jpg"
           alt="Background image of Tate Student Center"
@@ -53,14 +53,14 @@ export default function MarketPlace() {
           priority
         />
         <div className="absolute inset-0 flex flex-col items-center justify-center px-4 text-center">
-          <div className="absolute w-full h-15 top-31 bg-black opacity-40 z-5" />
+          <div className="absolute w-full h-22 top-13 bg-black blur-md opacity-65 z-5" />
           <h1
-            className="text-4xl md:text-5xl font-bold text-red-500 z-10 relative"
-            style={{ WebkitTextStroke: '1px black' }}
+            className="text-4xl md:text-5xl font-bold text-red-500 z-10 relative top-2"
+            style={{ WebkitTextStroke: '1px white' }}
           >
             BULLDOG MARKETPLACE
           </h1>
-          <div className="mt-4 w-full max-w-md z-10">
+          <div className="mt-8 w-full max-w-md z-10">
             {/* Search Input */}
             <input
               type="text"
@@ -71,7 +71,7 @@ export default function MarketPlace() {
             />
 
             {/* Price Range Inputs */}
-            <div className="flex gap-2 mt-4">
+            <div className="flex gap-2 mt-2">
               <input
                 type="number"
                 placeholder="Min Price"
@@ -90,7 +90,7 @@ export default function MarketPlace() {
 
             <button
               onClick={handleSearch}
-              className="mt-4 px-4 py-2 bg-red-500 text-white rounded-lg"
+              className="mt-4 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-700 hover:border-2 hover:border-white"
             >
               Search
             </button>

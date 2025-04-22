@@ -57,7 +57,7 @@ export default function Offers() {
   }
 
   return (
-    <div className="mx-auto py-8  flex flex-col gap-2">
+    <div className="mx-auto mt-2  flex flex-col">
       {offers.map(({offer, item}) => (
         <Offer key={offer.item_id} offer={offer} item={item}  />
       ))}

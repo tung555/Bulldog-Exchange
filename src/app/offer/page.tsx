@@ -71,6 +71,8 @@ export default function OffersPage() {
     <>
       <Navbar />
       <div className="max-w-5xl mx-auto py-10 px-4 min-h-screen">
+      <h1 className="text-5xl ml-3 ">Offers</h1>
+      <h5 className="text-xl ml-3 mt-1 mb-4">View your created offers and offers on your items below!</h5>
       <Offers />
 
       </div>
