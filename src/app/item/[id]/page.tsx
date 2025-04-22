@@ -135,6 +135,25 @@ export default function ExpandedItem() {
     );
   }
 
+  const setConditionColor = () => {
+    let baseClass = "size-fit p-2 mb-3 rounded-md";
+    if (item.condition === "Brand New") {
+      baseClass += " bg-[#2bba00]";
+    } else if (item.condition === "Like New") {
+      baseClass += " bg-[#bbdb44]"
+    } else if (item.condition === "Very Good") {
+      baseClass += " bg-[#f7e379]"
+    } else if (item.condition === "Good") {
+      baseClass += " bg-[#f2a134]"
+    } else if (item.condition === "Acceptable") {
+      baseClass += " bg-[#e51f1f]"
+    } else {
+      baseClass += " bg-[#c8c8c8]"
+    }
+
+    return baseClass;
+  }
+
   return (
     
     <div className="flex flex-col h-screen grow">
@@ -165,7 +184,9 @@ export default function ExpandedItem() {
               </button>
             </div>
             <p className="text-xl mb-3 text-red-600 font-bold">${item.price}</p>
-            <p className="text-md mb-3">Condition: {item.condition}</p>
+            <div className={setConditionColor()}>
+              <p className="text-md">{item.condition}</p>
+            </div>
             <p className="text-md">{item.description}</p>
           </div>
 

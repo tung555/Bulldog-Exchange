@@ -9,7 +9,6 @@ export async function middleware(request:NextRequest) {
     });
     
     if (!token) {
-        console.log("no token");
         return NextResponse.redirect(new URL("/login",request.url));    
     }
     return NextResponse.next();
@@ -18,6 +17,8 @@ export async function middleware(request:NextRequest) {
 export const config = {
     matcher: [
         "/my-items",
-        "/item/:id*"
+        "/item/:id*",
+        "/profile",
+        "/offer"
     ]
 }

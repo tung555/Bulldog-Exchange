@@ -34,8 +34,8 @@ const Navbar = () => {
             <Link href="/MarketPlace" className="text-black hover:bg-gray-900 hover:text-white rounded-md px-3 py-2">
               Marketplace
             </Link>
-            <Link href="/about" className="text-black hover:bg-gray-900 hover:text-white rounded-md px-3 py-2">
-              About
+            <Link href="/profile" className="text-black hover:bg-gray-900 hover:text-white rounded-md px-3 py-2">
+             Profile
             </Link>
             <Link href="/contact" className="text-black hover:bg-gray-900 hover:text-white rounded-md px-3 py-2">
               Contact
