@@ -20,7 +20,6 @@ export const config = {
         "/item/:id*",
         "/profile",
         "/offer",
-        "/offer",
         "/offer/:id*",
         "/offer/user/:userId*"
     ]
