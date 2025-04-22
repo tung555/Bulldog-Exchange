@@ -52,24 +52,32 @@ export default function ExpandedItem() {
 
   const submitOffer = async () => {
     if (!session?.user?.id) return;
-    alert(offerPlaced ? 'Offer Removed' : 'Offer Submitted');
-    setOfferPlaced((prev) => !prev);
+    console.log("Button Pressed");
+  const checkRes = await fetch(`/api/offer/user/${session.user.id}?item_id=${itemId}`);
+  const existingOffer = await checkRes.json();
 
-    const res = await fetch('/api/offer', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
+  const method = existingOffer?._id ? 'PUT' : 'POST';
+  const url = existingOffer?._id ? `/api/offer/${existingOffer._id}` : `/api/offer`;
+
+  const res = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
         offerer_id: session.user.id,
         offerer_name: session.user.name,
         owner_id: item.ownerUid,
         item_id: itemId,
         title: item.title,
         price: offerPrice,
-        status: "pending"
+        status: 'pending',
       }),
     });
 
+
+
+
     if (res.ok) {
+      alert('Offer submitted successfully!');
       router.refresh();
     }
   };

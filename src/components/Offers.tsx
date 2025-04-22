@@ -7,6 +7,7 @@ import Offer from './Offer';
 
 interface Offer {
     offer: {
+    _id: string;
     offerer_id: string;
     offerer_name: string;
     owner_id: string;
@@ -56,7 +57,7 @@ export default function Offers() {
   }
 
   return (
-    <div className="max-w-6xl mx-auto py-8 px-4 flex flex-col gap-6">
+    <div className="mx-auto py-8  flex flex-col gap-2">
       {offers.map(({offer, item}) => (
         <Offer key={offer.item_id} offer={offer} item={item}  />
       ))}

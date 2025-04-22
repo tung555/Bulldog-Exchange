@@ -47,51 +47,9 @@ export default function OffersPage() {
     }
   }, [session, status]);
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
 
-  const handleMapChange = (e: MapMouseEvent) => {
-    if (e.detail.latLng) {
-      setFormData((prev) => ({
-        ...prev,
-        position: {
-          lat: e.detail.latLng.lat,
-          lng: e.detail.latLng.lng,
-        },
-      }));
-    }
-  };
-
-  const handlePostItem = async () => {
-    if (!session?.user?.id) return;
-
-    const res = await fetch('/api/items', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        ...formData,
-        price: parseFloat(formData.price),
-        ownerUid: session.user.id
-      }),
-    });
-
-    if (res.ok) {
-      setShowModal(false);
-      setFormData({
-        title: '',
-        price: '',
-        condition: '',
-        description: '',
-        imageUrl: '',
-        position: { lat: 0, lng: 0 },
-      });
-      router.refresh();
-    }
-  };
+  
+    
 
   if (status === 'loading') return <div className="p-10 text-center">Loading...</div>;
 

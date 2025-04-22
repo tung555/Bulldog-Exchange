@@ -14,7 +14,7 @@ interface RouteParams {
   }
 
 export async function PUT(req: NextRequest, { params }: RouteParams) {
-  const { id } = params;
+    const { id } = await params;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return NextResponse.json({ error: 'Invalid offer ID' }, { status: 400 });
@@ -23,15 +23,20 @@ export async function PUT(req: NextRequest, { params }: RouteParams) {
   try {
     await connectMongoDB();
 
-    const { status } = await req.json();
+    const { status, price } = await req.json();
 
     if (!status) {
       return NextResponse.json({ error: 'Status is required' }, { status: 400 });
     }
 
+    const updateFields: any = { status };
+    if (price !== undefined) updateFields.price = price;
+
     const updatedOffer = await Offer.findByIdAndUpdate(
       id,
-      { status },
+      updateFields, {
+        new: true,
+      }
     );
 
     if (!updatedOffer) {

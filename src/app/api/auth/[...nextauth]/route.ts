@@ -4,6 +4,7 @@ import connectMongoDB from '../../../../../mongodb';
 import User from "@/models/user";
 import type { IUser } from "@/models/user";
 import bcrypt from "bcryptjs";
+import { getToken } from "next-auth/jwt";
 
 export const authOptions: AuthOptions = {
   providers: [
