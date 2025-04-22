@@ -46,6 +46,12 @@ const Navbar = () => {
                 My Items
               </Link>
             )}
+
+            {session?.user && (
+              <Link href="/offer" className="text-black hover:bg-gray-900 hover:text-white rounded-md px-3 py-2">
+                Offers
+              </Link>
+            )}
           </div>
 
           {/* Right Side Auth Buttons */}

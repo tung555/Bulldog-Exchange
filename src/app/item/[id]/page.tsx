@@ -8,9 +8,12 @@ import Link from 'next/link';
 import Footer from '@/components/footer';
 import MapWrapper from '@/components/MapWrapper';
 import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
 interface Item {
-  title: string;
+  _id?: string;
+  ownerUid: string, 
+  title?: string;
   price: number;
   condition: string;
   description?: string;
@@ -21,13 +24,16 @@ interface Item {
   };
 }
 
+
 export default function ExpandedItem() {
   const [item, setItem] = useState<Item | null>(null);
   const [addrInfo, setAddrInfo] = useState({address_line1:"",state_code:"",city:"",postcode:""});
   const [offerPlaced, setOfferPlaced] = useState(false);
   const [showAddress, setShowAddress] = useState(false);
+  const [offerPrice, setOfferPrice] = useState('');
   const params = useParams();
   const itemId = params?.id as string;
+  const router = useRouter();
 
   const { data: session, status } = useSession();
   
@@ -61,9 +67,42 @@ export default function ExpandedItem() {
     }
   }, [itemId, status]);
   
-  const submitOffer = () => {
-    alert(offerPlaced ? 'Offer Removed' : 'Offer Submitted');
-    setOfferPlaced((prev) => !prev);
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
+    setOfferPrice(e.target.value);
+  };
+
+  const submitOffer = async () => {
+    if (!session?.user?.id) return;
+    console.log("Button Pressed");
+  const checkRes = await fetch(`/api/offer/user/${session.user.id}?item_id=${itemId}`);
+  const existingOffer = await checkRes.json();
+
+  const method = existingOffer?._id ? 'PUT' : 'POST';
+  const url = existingOffer?._id ? `/api/offer/${existingOffer._id}` : `/api/offer`;
+
+  const res = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+        offerer_id: session.user.id,
+        offerer_name: session.user.name,
+        owner_id: item.ownerUid,
+        item_id: itemId,
+        title: item.title,
+        price: offerPrice,
+        status: 'pending',
+      }),
+    });
+
+
+
+
+    if (res.ok) {
+      alert('Offer submitted successfully!');
+      router.refresh();
+    }
   };
 
   if (status === 'loading') {
@@ -97,6 +136,7 @@ export default function ExpandedItem() {
   }
 
   return (
+    
     <div className="flex flex-col h-screen grow">
       <Navbar />
       <div className="grid grid-cols-6 grow">
@@ -137,6 +177,8 @@ export default function ExpandedItem() {
           </div>
 
           <div className="h-1/6 bg-white flex justify-evenly items-center text-white">
+            <input name="offerInput" className="p-1 text-black border-black-2 bg-gray-50" onChange={handleChange} required placeholder="Offer here" min="0 value=''">
+            </input>
             <button
               className="cursor-pointer bg-red-500 h-3/5 w-1/5 text-center flex justify-center items-center rounded-md"
               onClick={submitOffer}

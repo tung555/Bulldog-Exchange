@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import connectMongoDB from '@/lib/mongodb';
+import connectMongoDB from '../../../../../mongodb';
 import Item from '@/models/item';
 
 export async function GET(
@@ -7,7 +7,7 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   const storeParams = await params;
-  const { id } = storeParams;
+  const { id } = await storeParams;
 
   try {
     await connectMongoDB();

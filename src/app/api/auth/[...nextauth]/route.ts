@@ -1,9 +1,10 @@
 import NextAuth, { AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import connectMongoDB from "@/lib/mongodb";
+import connectMongoDB from '../../../../../mongodb';
 import User from "@/models/user";
 import type { IUser } from "@/models/user";
 import bcrypt from "bcryptjs";
+import { getToken } from "next-auth/jwt";
 
 export const authOptions: AuthOptions = {
   providers: [
@@ -24,7 +25,7 @@ export const authOptions: AuthOptions = {
         if (!isValid) return null;
       
         return {
-          id: user._id.toString(),
+          id: user.id.toString(),
           email: user.email,
           name: user.name,
         };
